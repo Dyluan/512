@@ -77,8 +77,20 @@ const moveBoard = (direction, board) => {
             break;
 
         case "ArrowUp":
+            for (let i=0; i<board.children.length; i+=3) {
+                let firstElem = board.children[i];
+                let secondElem = board.children[i+1];
+                let thirdElem = board.children[i+2];
+                
+                let arr = [parseInt(firstElem.innerText), parseInt(secondElem.innerText), parseInt(thirdElem.innerText)];
+                let shifted = addition(arr);
 
+                firstElem.innerText = shifted[0];
+                secondElem.innerText = shifted[1];
+                thirdElem.innerText = shifted[2];
+            }
             break;
+            
         case "ArrowDown":
 
             break;
@@ -111,6 +123,35 @@ function addition (liste) {
         else {
             liste[1] *= 2;
             liste[0] = 0;
+        }
+    }
+    //si aucun doublons
+    else {
+        // 2-4-0 => 0-2-4
+        if (liste[2] == 0 && liste[0]!=0 && liste[1]!=0) {
+            liste[2] = liste[1];
+            liste[1] = liste[0];
+            liste[0] = 0;
+        }
+        // 2-0-4 => 0-2-4
+        else if (liste[1] == 0 && liste[0] != 0 && liste[2] != 0) {
+            liste[1] = liste[0];
+            liste[0] = 0;
+        }
+        //ici on teste les cas de figure où on a 2*0 sur la mm ligne
+        else {
+            //0-2-0
+            if (liste[1]!=0 && liste[0]==0 && liste[2]==0) {
+                liste[2] == liste[1];
+                liste[1] = 0;
+                liste[0] = 0;
+            }
+            //2-0-0
+            else if(liste[0]!=0 && liste[1]==0 && liste[2]==0) {
+                liste[2]==liste[0];
+                liste[1]=0;
+                liste[0]=0;
+            }
         }
     }
     return liste;
