@@ -12,7 +12,53 @@ document.body.addEventListener('keydown', (e) => {
     addElement(board);
     
     //add here a function to add some nice colors
+    colorize(board);
 })
+
+const colorize = (board) => {
+    let array = [];
+    for (let elem of board.children) {
+        array.push(elem);
+    }
+    console.log(array)
+    for (let elem of array) {
+        let tempElem = parseInt(elem.innerText);
+        switch(tempElem) {
+            case 0:
+                elem.style.backgroundColor = '#e5e5e5';
+                break;
+            case 2:
+                elem.style.backgroundColor = '#ffba08';
+                break;
+            case 4:
+                elem.style.backgroundColor = '#faa307';
+                break;
+            case 8:
+                elem.style.backgroundColor = '#f48c06';
+                break;
+            case 16:
+                elem.style.backgroundColor = '#e85d04';
+                break;
+            case 32:
+                elem.style.backgroundColor = '#dc2f02';
+                break;
+            case 64:
+                elem.style.backgroundColor = '#d00000';
+                break;
+            case 128:
+                elem.style.backgroundColor = '#9d0208';
+                break;
+            case 256:
+                elem.style.backgroundColor = '#6a040f';
+                break;
+            case 512:
+                elem.style.backgroundColor = '#ffba08';
+                break;
+            default:
+                break;
+        }
+    }
+}
 
 const addElement = (board) => {
     const size = board.children.length;
@@ -181,7 +227,6 @@ function addition (liste) {
     }
     return liste;
 }
-
 function isOpposes (liste) {
     //x-0-x 
     if (liste[0] == liste[2] && liste[1] == 0 && liste[0] != 0) {
