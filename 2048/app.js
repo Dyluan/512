@@ -2,43 +2,50 @@ board = document.getElementsByClassName('board')[0];
 restart = document.getElementsByClassName('restart')[0];
 
 document.body.addEventListener('keydown', (e) => {
-    moveBoard(e, board)
-    switch(e.key) {
-        case "ArrowLeft":
+    //prevents the arrows from scrolling
+    e.preventDefault();
+    
+    //moves the board according to the direction
+    moveBoard(e, board);
 
-            addElement(board);
-            
-            break;
-
-        case "ArrowRight":
-            // moveBoard(e, board);
-            addElement(board);
-            
-            break;
-
-        case "ArrowUp":
-
-            addElement(board);
-            
-            break;
-
-        case "ArrowDown":
-
-            addElement(board);
-            
-            break;
-    }
+    //adds 2 or 4 in an empty space of the board. BUGGY
+    addElement(board);
+    
+    //add here a function to add some nice colors
 })
 
 const addElement = (board) => {
     const size = board.children.length;
     let randomElement = board.children[Math.floor(Math.random() * size)];
+    let array = []
+    let score = 0;
 
-    while(randomElement.innerText !== '0') {
-        randomElement = board.children[Math.floor(Math.random() * size)];
+    for (let elem of board.children) {
+        array.push(parseInt(elem.innerText));
+        score += parseInt(elem.innerText)
     }
     
-    randomElement.innerText = '2';
+    //DOES NOT WORK PROPERLY.
+    //goes in the ELSE as soon as there's no more 0 on the board
+    if (array.includes(0)) {
+        while(randomElement.innerText !== '0') {
+            randomElement = board.children[Math.floor(Math.random() * size)];
+        }
+        let twoOrFour = randomRoundNumber();
+        if (twoOrFour) {
+            randomElement.innerText = 4;
+        } else {
+            randomElement.innerText = 2;
+        }
+        
+    } else {
+        alert('perdu! Score : ')
+        console.log(score);
+    }
+}
+
+function randomRoundNumber() {
+    return Math.round(Math.random());
 }
 
 const moveBoard = (direction, board) => {
@@ -77,10 +84,28 @@ const moveBoard = (direction, board) => {
             break;
 
         case "ArrowUp":
-            for (let i=0; i<board.children.length; i+=3) {
+
+            for (let i=board.children.length-1; i>5; i-=1) {
                 let firstElem = board.children[i];
-                let secondElem = board.children[i+1];
-                let thirdElem = board.children[i+2];
+                let secondElem = board.children[i-3];
+                let thirdElem = board.children[i-6];
+                
+                let arr = [parseInt(firstElem.innerText), parseInt(secondElem.innerText), parseInt(thirdElem.innerText)];
+                let shifted = addition(arr);
+
+                firstElem.innerText = shifted[0];
+                secondElem.innerText = shifted[1];
+                thirdElem.innerText = shifted[2];
+            }
+            
+            break;
+
+        case "ArrowDown":
+
+            for (let i=0; i<board.children.length-6; i+=1) {
+                let firstElem = board.children[i];
+                let secondElem = board.children[i+3];
+                let thirdElem = board.children[i+6];
                 
                 let arr = [parseInt(firstElem.innerText), parseInt(secondElem.innerText), parseInt(thirdElem.innerText)];
                 let shifted = addition(arr);
@@ -90,10 +115,6 @@ const moveBoard = (direction, board) => {
                 thirdElem.innerText = shifted[2];
             }
             break;
-            
-        case "ArrowDown":
-
-            break;
     }
 }
 
@@ -102,8 +123,10 @@ function addition (liste) {
     if (isOpposes(liste)) {
         // console.log('opposés : ', liste)
         liste[2] *= 2;
-        liste[1] = liste[0];
+        liste[1] = 0;
         liste[0] = 0;
+        
+        return liste;
     }
     //fonctionne
     if (isDerniers(liste)) {
@@ -111,9 +134,11 @@ function addition (liste) {
         liste[2] *= 2;
         liste[1] = liste[0];
         liste[0] = 0;
+        
+        return liste;
     }
     //fonctionne
-    else if(isPremiers(liste)) {
+    if(isPremiers(liste)) {
         // console.log('premiers : ', liste)
         if (liste[2] == 0) {
             liste[2] = liste[1]*2;
@@ -142,13 +167,13 @@ function addition (liste) {
         else {
             //0-2-0
             if (liste[1]!=0 && liste[0]==0 && liste[2]==0) {
-                liste[2] == liste[1];
+                liste[2] = liste[1];
                 liste[1] = 0;
                 liste[0] = 0;
             }
             //2-0-0
             else if(liste[0]!=0 && liste[1]==0 && liste[2]==0) {
-                liste[2]==liste[0];
+                liste[2]=liste[0];
                 liste[1]=0;
                 liste[0]=0;
             }
@@ -158,6 +183,7 @@ function addition (liste) {
 }
 
 function isOpposes (liste) {
+    //x-0-x 
     if (liste[0] == liste[2] && liste[1] == 0 && liste[0] != 0) {
         return true;
     }
@@ -174,6 +200,7 @@ function isPremiers (liste) {
     }
 }
 function isDerniers (liste) {
+    //y-x-x
     if (liste[1] == liste[2] && liste[1] != 0) {
         return true;
     }
