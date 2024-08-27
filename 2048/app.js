@@ -1,17 +1,37 @@
 board = document.getElementsByClassName('board')[0];
 restart = document.getElementsByClassName('restart')[0];
+messageElement = document.getElementsByClassName('message')[0];
+restart = document.getElementsByClassName('restart')[0];
 
 document.body.addEventListener('keydown', (e) => {
     //prevents the arrows from scrolling
     e.preventDefault();
+
+    //initialise score
+    let score = 0;
     
     //moves the board according to the direction
     moveBoard(e, board);
 
-    //adds 2 or 4 in an empty space of the board. BUGGY
+    //adds 2 or 4 in an empty space of the board. ENDS THE GAME TOO SOON
     addElement(board);
     
     //add here a function to add some nice colors
+    colorize(board);
+
+    //update the score and display of it
+    for (let elem of board.children) {
+        score += parseInt(elem.innerText);
+    }
+    messageElement.innerText = `Score : ${score}`;
+})
+
+restart.addEventListener('click', (e) => {
+    for (let elem of board.children) {
+        elem.innerText = 0;
+    }
+    score = 0;
+    messageElement.innerText = `Score : ${score}`;
     colorize(board);
 })
 
@@ -86,7 +106,6 @@ const addElement = (board) => {
         
     } else {
         alert('perdu! Score : ')
-        console.log(score);
     }
 }
 
@@ -160,6 +179,10 @@ const moveBoard = (direction, board) => {
                 secondElem.innerText = shifted[1];
                 thirdElem.innerText = shifted[2];
             }
+            break;
+        
+        default:
+
             break;
     }
 }
