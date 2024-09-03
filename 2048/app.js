@@ -3,11 +3,13 @@ restart = document.getElementsByClassName('restart')[0];
 messageElement = document.getElementsByClassName('message')[0];
 restart = document.getElementsByClassName('restart')[0];
 
+
+
 document.body.addEventListener('keydown', (e) => {
     //prevents the arrows from scrolling
     e.preventDefault();
 
-    //initialise score
+    //initialise score. Score has to stay in the scope of this function. Does not calculate correctly otherwise.
     let score = 0;
     
     //moves the board according to the direction
